@@ -518,3 +518,56 @@ footer p {
         padding: 40px 20px;
     }
 }
+/* ==========================================
+   ✨ PREMIUM PORTFOLIO ANIMATIONS 
+   ========================================== */
+
+/* 1. Page Load Reveal for Hero Section */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content > * {
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Staggering the entrance of elements */
+.hero-content .badge-status { animation-delay: 0.1s; }
+.hero-content h1           { animation-delay: 0.25s; }
+.hero-content .hero-subtitle { animation-delay: 0.4s; }
+.hero-content .hero-desc     { animation-delay: 0.55s; }
+.hero-content .hero-cta      { animation-delay: 0.7s; }
+
+
+/* 2. Interactive Neon Hover Upgrades */
+.skill-category:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2), 
+                inset 0 0 12px rgba(0, 242, 254, 0.05);
+    transform: translateY(-6px);
+}
+
+.project-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    border-color: var(--primary);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 
+                0 0 25px rgba(0, 242, 254, 0.15);
+}
+
+/* Smooth Icon Pulse on Hover */
+.skill-category:hover .skill-icon i {
+    animation: iconPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes iconPulse {
+    from { transform: scale(1); filter: drop-shadow(0 0 2px var(--primary)); }
+    to { transform: scale(1.15); filter: drop-shadow(0 0 8px var(--primary)); }
+}
