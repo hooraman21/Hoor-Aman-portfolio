@@ -517,82 +517,81 @@ footer p {
     }
 }
 
-/* ==========================================
-   ⚡ HIGH-IMPACT HARDWARE CIRCUIT PATHWAY ANIMATION
-   ========================================== */
-
-/* 1. Quick Technical Fade-In (Page Load) */
-@keyframes structuralFade {
-    from {
+@keyframes aiScanline {
+    0% {
         opacity: 0;
-        transform: translateY(20px);
+        filter: brightness(0.2) contrast(2) drop-shadow(0 0 0px var(--primary));
+        transform: scaleY(0.9) skewX(-4deg);
     }
-    to {
+    30% {
+        opacity: 0.7;
+        /* AI Node connection pulse */
+        filter: brightness(1.8) drop-shadow(0 0 15px var(--primary));
+    }
+    60% {
+        opacity: 0.4;
+        filter: brightness(0.8) contrast(1.5);
+    }
+    100% {
         opacity: 1;
-        transform: translateY(0);
+        filter: brightness(1) contrast(1) skewX(0deg);
+        transform: scaleY(1);
     }
 }
 
-.hero-content > * {
-    opacity: 0;
-    animation: structuralFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
 
-.hero-content .badge-status  { animation-delay: 0.05s; }
-.hero-content h1            { animation-delay: 0.15s; }
-.hero-content .hero-subtitle { animation-delay: 0.25s; }
-.hero-content .hero-desc     { animation-delay: 0.35s; }
-.hero-content .hero-cta      { animation-delay: 0.45s; }
+.hero-content .badge-status  { opacity: 0; animation: aiScanline 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.1s; }
+.hero-content h1            { opacity: 0; animation: aiScanline 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.25s; }
+.hero-content .hero-subtitle { opacity: 0; animation: aiScanline 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.4s; }
+.hero-content .hero-desc     { opacity: 0; animation: aiScanline 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.55s; }
+.hero-content .hero-cta      { opacity: 0; animation: aiScanline 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.7s; }
 
 
-/* 2. Traveling Laser Circuit Border (Hover Effect) */
+
 .skill-category, .project-card {
     position: relative;
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                background-color 0.3s ease;
+    overflow: hidden;
+    background: rgba(13, 20, 34, 0.85);
+    border: 1px solid rgba(0, 242, 254, 0.15);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* Creating the traveling light layer */
+
 .skill-category::before, .project-card::before {
-    content: '';
+    content: '01101010 11001101';
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 2px; /* Wire Thickness */
-    background: linear-gradient(135deg, var(--primary), transparent, var(--primary), transparent);
-    background-size: 300% 300%;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    bottom: -20px;
+    right: 10px;
+    color: rgba(0, 242, 254, 0.0);
+    transition: all 0.5s ease;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-/* When mouse enters, the circuit wire lights up and moves */
-@keyframes circuitFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    letter-spacing: 2px;
 }
 
 .skill-category:hover::before, .project-card:hover::before {
-    opacity: 1;
-    animation: circuitFlow 2s linear infinite;
+    bottom: 8px;
+    color: rgba(0, 242, 254, 0.18); /* Reveals raw computer architecture register strings */
+    text-shadow: 0 0 4px rgba(0, 242, 254, 0.4);
 }
 
-/* Card physical response */
+
 .skill-category:hover, .project-card:hover {
-    transform: translateY(-8px);
-    background-color: #16223b !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
-                0 0 20px rgba(0, 242, 254, 0.1);
+    transform: translateY(-8px) scale(1.015);
+    border-color: var(--primary);
+    background: rgba(18, 30, 54, 0.95);
+    /* Multi-layered algorithmic drop shadow */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 
+                0 0 30px rgba(0, 242, 254, 0.15),
+                inset 0 0 15px rgba(0, 242, 254, 0.08);
 }
 
-/* Pop icons and typography inside active blocks */
-.skill-category:hover .skill-icon,
+
+.skill-category:hover .skill-icon i,
 .project-card:hover h3 {
     color: #ffffff;
-    transform: scale(1.05);
-    transition: transform 0.3s ease, color 0.3s ease;
+    filter: drop-shadow(0 0 10px var(--primary)) drop-shadow(0 0 20px var(--primary));
+    transform: scale(1.08);
+    transition: all 0.3s ease;
 }
