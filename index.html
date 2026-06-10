@@ -25,6 +25,8 @@
     --serif: 'DM Serif Display', serif;
     --radius: 12px;
     --transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --lightning: #7FFFFF;
+    --lightning2: #BFFFFF;
   }
 
   html { scroll-behavior: smooth; }
@@ -37,14 +39,24 @@
     overflow-x: hidden;
   }
 
+  /* ── LIGHTNING CANVAS ── */
+  #lightning-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.55;
+  }
+
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     height: var(--nav-h);
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 5vw;
-    background: rgba(247,245,240,0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(247,245,240,0.88);
+    backdrop-filter: blur(14px);
     border-bottom: 0.5px solid var(--border);
   }
 
@@ -54,9 +66,10 @@
     color: var(--text);
     text-decoration: none;
     letter-spacing: -0.02em;
+    position: relative; z-index: 1;
   }
 
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; position: relative; z-index: 1; }
   .nav-links a {
     font-size: 0.875rem;
     font-weight: 500;
@@ -72,19 +85,17 @@
     opacity: 0;
     transform: translateY(40px);
     transition: opacity var(--transition), transform var(--transition);
+    position: relative; z-index: 1;
   }
   .reveal.slide-left  { transform: translateX(-50px); }
   .reveal.slide-right { transform: translateX(50px); }
-  .reveal.visible {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
+  .reveal.visible { opacity: 1; transform: translate(0, 0); }
 
-  /* stagger children */
   .stagger > * {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity var(--transition), transform var(--transition);
+    position: relative; z-index: 1;
   }
   .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0.05s; }
   .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.15s; }
@@ -97,7 +108,7 @@
   .stagger.visible > *:nth-child(9) { opacity:1; transform:none; transition-delay:0.85s; }
 
   /* ── LAYOUT ── */
-  section { padding: 100px 5vw; }
+  section { padding: 100px 5vw; position: relative; z-index: 1; }
   .section-label {
     font-size: 0.75rem;
     font-weight: 600;
@@ -148,6 +159,11 @@
     width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(1.5); }
   }
 
   .hero-name {
@@ -186,24 +202,12 @@
     transition: all 0.25s ease;
     cursor: pointer;
     border: none;
+    position: relative; z-index: 1;
   }
-  .btn-primary {
-    background: var(--text);
-    color: var(--bg);
-  }
-  .btn-primary:hover {
-    background: var(--accent);
-    transform: translateY(-2px);
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover {
-    background: var(--surface2);
-    transform: translateY(-2px);
-  }
+  .btn-primary { background: var(--text); color: var(--bg); }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--surface2); transform: translateY(-2px); }
 
   .hero-scroll-hint {
     margin-top: 5rem;
@@ -216,15 +220,23 @@
   }
   .hero-scroll-hint::before {
     content: '';
-    width: 1px;
-    height: 48px;
+    width: 1px; height: 48px;
     background: linear-gradient(to bottom, transparent, var(--text-muted));
   }
 
-  /* ── ABOUT ── */
-  #about {
-    background: var(--surface);
+  /* ── LIGHTNING FLASH OVERLAY ── */
+  #flash-overlay {
+    position: fixed;
+    top:0;left:0;right:0;bottom:0;
+    pointer-events: none;
+    z-index: 200;
+    background: rgba(180,240,255,0.18);
+    opacity: 0;
+    transition: opacity 0.05s ease;
   }
+
+  /* ── ABOUT ── */
+  #about { background: var(--surface); }
   .about-inner {
     max-width: 1100px;
     margin: 0 auto;
@@ -249,6 +261,11 @@
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
     padding: 1.25rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .skill-card:hover {
+    border-color: rgba(45,106,79,0.4);
+    box-shadow: 0 0 18px rgba(45,200,180,0.12);
   }
   .skill-card h4 {
     font-size: 0.8rem;
@@ -258,17 +275,10 @@
     color: var(--accent);
     margin-bottom: 0.6rem;
   }
-  .skill-card p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
+  .skill-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
 
   /* ── EXPERIENCE ── */
-  #experience { max-width: 1100px; margin: 0 auto; }
-  #experience > * { max-width: 1100px; }
-
-  .exp-timeline { display: flex; flex-direction: column; gap: 0; }
+  .exp-timeline { display: flex; flex-direction: column; gap: 0; max-width: 1100px; margin: 0 auto; }
   .exp-item {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -278,148 +288,84 @@
     align-items: start;
   }
   .exp-item:first-child { border-top: 0.5px solid var(--border); }
-
-  .exp-date {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    padding-top: 4px;
-  }
+  .exp-date { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.04em; padding-top: 4px; }
   .exp-badge {
     display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--accent-light);
-    color: var(--accent);
-    padding: 3px 10px;
-    border-radius: 100px;
-    margin-bottom: 8px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--accent-light); color: var(--accent);
+    padding: 3px 10px; border-radius: 100px; margin-bottom: 8px;
   }
   .exp-role { font-size: 1.1rem; font-weight: 500; margin-bottom: 4px; }
-  .exp-company {
-    font-family: var(--serif);
-    font-size: 1.4rem;
-    color: var(--accent2);
-    margin-bottom: 0.75rem;
-  }
+  .exp-company { font-family: var(--serif); font-size: 1.4rem; color: var(--accent2); margin-bottom: 0.75rem; }
   .exp-desc { font-size: 0.95rem; color: var(--text-muted); max-width: 480px; }
 
   /* ── PROJECTS ── */
   #projects { background: var(--surface); }
   #projects .inner { max-width: 1100px; margin: 0 auto; }
-
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
   }
-
   .project-card {
     background: var(--bg);
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
     padding: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative; overflow: hidden;
   }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(127,255,255,0.07), transparent);
+    transition: left 0.5s ease;
+  }
+  .project-card:hover::before { left: 150%; }
   .project-card:hover {
     transform: translateY(-4px);
     border-color: rgba(45,106,79,0.4);
-    box-shadow: 0 12px 40px rgba(45,106,79,0.08);
+    box-shadow: 0 12px 40px rgba(45,106,79,0.08), 0 0 20px rgba(127,255,255,0.06);
   }
-
-  .project-cat {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-  .project-title {
-    font-family: var(--serif);
-    font-size: 1.3rem;
-    line-height: 1.3;
-    color: var(--text);
-  }
-  .project-desc {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.65;
-    flex: 1;
-  }
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 0.25rem;
-  }
+  .project-cat { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+  .project-title { font-family: var(--serif); font-size: 1.3rem; line-height: 1.3; color: var(--text); }
+  .project-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; flex: 1; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.25rem; }
   .tag {
-    font-size: 0.72rem;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 100px;
-    background: var(--surface2);
-    color: var(--text-muted);
-    border: 0.5px solid var(--border);
+    font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 100px;
+    background: var(--surface2); color: var(--text-muted); border: 0.5px solid var(--border);
   }
   .project-link {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: gap 0.2s;
+    margin-top: 0.5rem; font-size: 0.85rem; font-weight: 500; color: var(--accent);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s;
   }
   .project-link:hover { gap: 10px; }
   .project-link::after { content: '→'; }
 
   /* ── CONTACT ── */
-  #contact { max-width: 1100px; margin: 0 auto; }
   .contact-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+    max-width: 1100px; margin: 0 auto;
   }
   .contact-cta-text {
     font-family: var(--serif);
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-    line-height: 1.25;
-    letter-spacing: -0.03em;
-    margin-bottom: 1rem;
+    line-height: 1.25; letter-spacing: -0.03em; margin-bottom: 1rem;
   }
   .contact-cta-text em { font-style: italic; color: var(--accent2); }
-  .contact-sub {
-    font-size: 1rem;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    line-height: 1.7;
-  }
+  .contact-sub { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
   .contact-links { display: flex; flex-direction: column; gap: 1.25rem; }
   .contact-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: var(--text);
+    background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius);
+    text-decoration: none; color: var(--text);
     transition: all 0.25s ease;
   }
   .contact-link:hover {
-    border-color: rgba(45,106,79,0.5);
-    background: var(--accent-light);
-    transform: translateX(4px);
+    border-color: rgba(45,106,79,0.5); background: var(--accent-light); transform: translateX(4px);
+    box-shadow: 0 0 16px rgba(127,255,255,0.08);
   }
   .contact-link-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px; }
   .contact-link-value { font-weight: 500; font-size: 0.95rem; }
@@ -427,14 +373,10 @@
 
   /* ── FOOTER ── */
   footer {
-    border-top: 0.5px solid var(--border);
-    padding: 2rem 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.825rem;
-    color: var(--text-muted);
-    max-width: 100%;
+    border-top: 0.5px solid var(--border); padding: 2rem 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.825rem; color: var(--text-muted);
+    position: relative; z-index: 1;
   }
 
   /* ── RESPONSIVE ── */
@@ -446,13 +388,18 @@
     .skills-grid { grid-template-columns: 1fr; }
     section { padding: 70px 5vw; }
   }
-
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .stagger > * { opacity: 1; transform: none; transition: none; }
+    .reveal, .stagger > * { opacity:1; transform:none; transition:none; }
+    #lightning-canvas { display: none; }
   }
 </style>
 </head>
 <body>
+
+<!-- LIGHTNING CANVAS -->
+<canvas id="lightning-canvas"></canvas>
+<!-- FLASH OVERLAY -->
+<div id="flash-overlay"></div>
 
 <!-- NAV -->
 <nav>
@@ -522,23 +469,23 @@
   <div style="max-width:1100px; margin:0 auto;">
     <p class="section-label reveal">Experience</p>
     <h2 class="section-title reveal" style="transition-delay:0.1s">Where I've worked.</h2>
-    <div class="exp-timeline">
-      <div class="exp-item reveal slide-left">
-        <div class="exp-date">Present</div>
-        <div>
-          <span class="exp-badge">Current</span>
-          <div class="exp-role">Frontend Developer Intern</div>
-          <div class="exp-company">CodeAlpha</div>
-          <p class="exp-desc">Accelerating web application development through responsive architectures, optimised code bases, and dynamic feature implementation.</p>
-        </div>
+  </div>
+  <div class="exp-timeline">
+    <div class="exp-item reveal slide-left">
+      <div class="exp-date">Present</div>
+      <div>
+        <span class="exp-badge">Current</span>
+        <div class="exp-role">Frontend Developer Intern</div>
+        <div class="exp-company">CodeAlpha</div>
+        <p class="exp-desc">Accelerating web application development through responsive architectures, optimised code bases, and dynamic feature implementation.</p>
       </div>
-      <div class="exp-item reveal slide-left" style="transition-delay:0.15s">
-        <div class="exp-date">2026</div>
-        <div>
-          <div class="exp-role">Engineering Intern</div>
-          <div class="exp-company">Arch Technologies</div>
-          <p class="exp-desc">Collaborated on foundational engineering tasks, dealing with system analysis, troubleshooting, and applying core technical concepts into physical frameworks.</p>
-        </div>
+    </div>
+    <div class="exp-item reveal slide-left" style="transition-delay:0.15s">
+      <div class="exp-date">2026</div>
+      <div>
+        <div class="exp-role">Engineering Intern</div>
+        <div class="exp-company">Arch Technologies</div>
+        <p class="exp-desc">Collaborated on foundational engineering tasks, dealing with system analysis, troubleshooting, and applying core technical concepts into physical frameworks.</p>
       </div>
     </div>
   </div>
@@ -554,81 +501,63 @@
         <span class="project-cat">Computer Architecture</span>
         <h3 class="project-title">SAP-1 Computer Model</h3>
         <p class="project-desc">Designed and verified a Simple-As-Possible computer model using Verilog. Engineered fundamental blocks including control units, RAM, and ALUs tracking system timing.</p>
-        <div class="project-tags">
-          <span class="tag">Verilog</span><span class="tag">Vivado</span><span class="tag">Digital Logic</span>
-        </div>
+        <div class="project-tags"><span class="tag">Verilog</span><span class="tag">Vivado</span><span class="tag">Digital Logic</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">Source Code</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Embedded Systems & IoT</span>
         <h3 class="project-title">IoT Smart Security System</h3>
         <p class="project-desc">Automated smart security infrastructure utilising microcontroller intelligence, keypads, LCDs, servo mechanisms, and environmental monitoring systems.</p>
-        <div class="project-tags">
-          <span class="tag">Arduino</span><span class="tag">ESP32</span><span class="tag">Sensors</span>
-        </div>
+        <div class="project-tags"><span class="tag">Arduino</span><span class="tag">ESP32</span><span class="tag">Sensors</span></div>
         <a href="https://github.com/hooraman21/IOT-based-smart-security-lock-system.git" class="project-link" target="_blank">Source Code</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Digital Logic Design</span>
         <h3 class="project-title">FSM Control Unit</h3>
         <p class="project-desc">Designed and mapped complex sequential logic circuits using Finite State Machines. Simulated hardware controllers tracking exact state execution cycles.</p>
-        <div class="project-tags">
-          <span class="tag">FSM</span><span class="tag">Proteus</span><span class="tag">Digital Logic</span>
-        </div>
+        <div class="project-tags"><span class="tag">FSM</span><span class="tag">Proteus</span><span class="tag">Digital Logic</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">View Design</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Digital Logic & CAO</span>
         <h3 class="project-title">Smart Automated Parking System</h3>
         <p class="project-desc">Engineered an automated tracking control system that manages available spaces, vehicle sequencing, and status indicator processing logic.</p>
-        <div class="project-tags">
-          <span class="tag">Logic Design</span><span class="tag">Simulation</span>
-        </div>
+        <div class="project-tags"><span class="tag">Logic Design</span><span class="tag">Simulation</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">View Design</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Embedded & Networking</span>
         <h3 class="project-title">ESP32 WiFi Web Server</h3>
-        <p class="project-desc">Configured an ESP32 module to establish local network connectivity and host an interactive, lightweight web portal to toggle mechanical pin configurations remotely.</p>
-        <div class="project-tags">
-          <span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">Networking</span>
-        </div>
+        <p class="project-desc">Configured an ESP32 module to establish local network connectivity and host an interactive web portal to toggle mechanical pin configurations remotely.</p>
+        <div class="project-tags"><span class="tag">ESP32</span><span class="tag">C++</span><span class="tag">Networking</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">Source Code</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Microcontroller Firmware</span>
         <h3 class="project-title">LM35 Temp Interface (ATmega328P)</h3>
         <p class="project-desc">Programmed an ATmega328P chip directly to capture voltage swings from an LM35 device, using internal ADC components to serialise temperature outputs.</p>
-        <div class="project-tags">
-          <span class="tag">ATmega328P</span><span class="tag">C</span><span class="tag">USART / ADC</span>
-        </div>
+        <div class="project-tags"><span class="tag">ATmega328P</span><span class="tag">C</span><span class="tag">USART / ADC</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">Source Code</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Automation & Electronics</span>
         <h3 class="project-title">Wireless Bluetooth Control</h3>
         <p class="project-desc">Designed a point-to-point wireless control interface connecting mobile devices to actuator arrays via Bluetooth transmission protocols.</p>
-        <div class="project-tags">
-          <span class="tag">Bluetooth</span><span class="tag">Embedded Systems</span>
-        </div>
+        <div class="project-tags"><span class="tag">Bluetooth</span><span class="tag">Embedded Systems</span></div>
         <a href="https://github.com/hooraman21/Bluetooth-Controlled-Embedded-Actuator-Motor-System.git" class="project-link" target="_blank">View Details</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Digital Electronics</span>
         <h3 class="project-title">7-Segment BCD Counter</h3>
         <p class="project-desc">Developed a Binary Coded Decimal logic tracker showcasing synchronised numeric sequences across hardware seven-segment display units.</p>
-        <div class="project-tags">
-          <span class="tag">BCD Logic</span><span class="tag">Proteus</span>
-        </div>
+        <div class="project-tags"><span class="tag">BCD Logic</span><span class="tag">Proteus</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">View Simulation</a>
       </div>
       <div class="project-card">
         <span class="project-cat">Frontend Development</span>
         <h3 class="project-title">Interactive Web Frameworks</h3>
         <p class="project-desc">A set of modular frontend systems including an audio player with dynamic queue timelines, a layout-optimised image gallery, and calculator algorithms.</p>
-        <div class="project-tags">
-          <span class="tag">HTML5 / CSS3</span><span class="tag">JavaScript (ES6+)</span>
-        </div>
+        <div class="project-tags"><span class="tag">HTML5 / CSS3</span><span class="tag">JavaScript (ES6+)</span></div>
         <a href="https://github.com/hooraman21" class="project-link" target="_blank">View Repo</a>
       </div>
     </div>
@@ -681,23 +610,124 @@
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-  document.querySelectorAll('.reveal, .stagger').forEach(el => {
-    observer.observe(el);
+document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('visible'));
+
+/* ── LIGHTNING ENGINE ── */
+const canvas = document.getElementById('lightning-canvas');
+const ctx = canvas.getContext('2d');
+const flash = document.getElementById('flash-overlay');
+
+let W, H;
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* Branch generator using recursive midpoint displacement */
+function branch(x1, y1, x2, y2, depth, segs) {
+  segs.push([x1, y1, x2, y2]);
+  if (depth <= 0) return;
+  const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * (Math.abs(x2 - x1) + Math.abs(y2 - y1)) * 0.4;
+  const my = (y1 + y2) / 2 + (Math.random() - 0.5) * (Math.abs(y2 - y1)) * 0.3;
+  branch(x1, y1, mx, my, depth - 1, segs);
+  branch(mx, my, x2, y2, depth - 1, segs);
+  if (Math.random() < 0.35) {
+    const bx = mx + (Math.random() - 0.5) * W * 0.25;
+    const by = my + Math.random() * (H - my) * 0.5;
+    branch(mx, my, bx, by, depth - 2, segs);
+  }
+}
+
+function makeBolt() {
+  const segs = [];
+  const sx = Math.random() * W;
+  const ex = sx + (Math.random() - 0.5) * W * 0.4;
+  branch(sx, 0, ex, H * (0.4 + Math.random() * 0.5), 6, segs);
+  return segs;
+}
+
+function drawBolt(segs, alpha) {
+  /* glow pass */
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.25;
+  ctx.strokeStyle = '#AAFFEE';
+  ctx.lineWidth = 6;
+  ctx.shadowBlur = 0;
+  ctx.lineCap = 'round';
+  segs.forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  });
+  /* core pass */
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = '#DFFFFF';
+  ctx.lineWidth = 1.2;
+  segs.forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  });
+  ctx.restore();
+}
+
+/* Strike scheduler */
+let strikes = [];     /* { segs, birth, dur } */
+let nextStrike = 0;
+
+function scheduleNext() {
+  nextStrike = performance.now() + 1800 + Math.random() * 3500;
+}
+scheduleNext();
+
+function triggerStrike() {
+  const segs = makeBolt();
+  const dur = 180 + Math.random() * 220;
+  strikes.push({ segs, birth: performance.now(), dur });
+  /* flash */
+  flash.style.opacity = (0.06 + Math.random() * 0.08).toFixed(3);
+  setTimeout(() => flash.style.opacity = 0, 60);
+  scheduleNext();
+}
+
+function animate(now) {
+  ctx.clearRect(0, 0, W, H);
+
+  /* trigger new strike */
+  if (now >= nextStrike) triggerStrike();
+
+  /* draw active strikes */
+  strikes = strikes.filter(s => {
+    const t = (now - s.birth) / s.dur;
+    if (t >= 1) return false;
+    /* fade in fast, fade out slow */
+    const alpha = t < 0.15 ? t / 0.15 : 1 - ((t - 0.15) / 0.85);
+    drawBolt(s.segs, alpha * 0.75);
+    return true;
   });
 
-  // immediately show hero elements
-  document.querySelectorAll('#hero .reveal').forEach(el => {
-    el.classList.add('visible');
-  });
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+/* Optional: extra strike on mouse click anywhere */
+document.addEventListener('click', (e) => {
+  if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+  const segs = [];
+  branch(e.clientX, 0, e.clientX + (Math.random()-0.5)*120, e.clientY, 6, segs);
+  strikes.push({ segs, birth: performance.now(), dur: 300 });
+  flash.style.opacity = '0.10';
+  setTimeout(() => flash.style.opacity = 0, 70);
+});
 </script>
 </body>
 </html>
