@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<!-- Font Awesome CDN added to fix missing icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -235,7 +238,7 @@
     transition: opacity 0.05s ease;
   }
 
-  /* ── ABOUT ── */
+  /* ── ABOUT & SKILLS ── */
   #about { background: var(--surface); }
   .about-inner {
     max-width: 1100px;
@@ -277,49 +280,42 @@
   }
   .skill-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
 
-
-  #skills { background: var(--surface); }
-  .skills-inner {
-    max-width: 1400px;
+  /* ── TECHNICAL CORE SECTION ── */
+  #skills { background: var(--bg); }
+  .skills-container {
+    max-width: 1100px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
   }
-  .skills-text p {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    line-height: 1.8;
-  }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
-  .skill-card {
-    background: var(--bg);
+  .skill-category {
+    background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.25rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: transform 0.3s var(--transition), border-color 0.3s;
   }
-  .skill-card:hover {
-    border-color: rgba(45,106,79,0.4);
-    box-shadow: 0 0 18px rgba(45,200,180,0.12);
+  .skill-category:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
   }
-  .skill-card h4 {
-    font-size: 0.8rem;
+  .skill-icon {
+    font-size: 2rem;
+    color: var(--accent2);
+    margin-bottom: 1rem;
+  }
+  .glitch-text {
+    font-size: 1.1rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
   }
-  .skill-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
-
-
+  .skill-category p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
 
   /* ── EXPERIENCE ── */
   .exp-timeline { display: flex; flex-direction: column; gap: 0; max-width: 1100px; margin: 0 auto; }
@@ -398,7 +394,7 @@
     line-height: 1.25; letter-spacing: -0.03em; margin-bottom: 1rem;
   }
   .contact-cta-text em { font-style: italic; color: var(--accent2); }
-  .contact-sub { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+  .contact-sub font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; 
   .contact-links { display: flex; flex-direction: column; gap: 1.25rem; }
   .contact-link {
     display: flex; align-items: center; justify-content: space-between;
@@ -450,7 +446,7 @@
   <a href="#hero" class="nav-logo">Hoor Aman</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#skills">skills</a></li>
+    <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -509,18 +505,19 @@
   </div>
 </section>
 
-<section id="skills" class="skills-section">
-    <div class="section-header">
-        <h2>Technical Core</h2>
-        <div class="divider"></div>
+<!-- TECHNICAL CORE -->
+<section id="skills">
+    <div style="max-width:1100px; margin:0 auto 3rem;">
+        <p class="section-label reveal">Core Specialties</p>
+        <h2 class="section-title reveal" style="margin-bottom:0;">Technical Competencies</h2>
     </div>
 
-    <div class="skills-container">
+    <div class="skills-container stagger">
         <div class="skill-category">
             <div class="skill-icon">
                 <i class="fas fa-microchip"></i>
             </div>
-            <h4 class="glitch-text" data-value="Embedded & Hardware">Embedded & Hardware</h4>
+            <h4 class="glitch-text">Embedded & Hardware</h4>
             <p>Embedded System Development, Hardware Design, Assembly Language</p>
         </div>
 
@@ -528,7 +525,7 @@
             <div class="skill-icon">
                 <i class="fas fa-code"></i>
             </div>
-            <h4 class="glitch-text" data-value="Frontend Dev">Frontend Dev</h4>
+            <h4 class="glitch-text">Frontend Dev</h4>
             <p>HTML, CSS, JavaScript, Responsive UI/UX Architecture</p>
         </div>
 
@@ -536,7 +533,7 @@
             <div class="skill-icon">
                 <i class="fas fa-terminal"></i>
             </div>
-            <h4 class="glitch-text" data-value="Backend & Systems">Backend & Systems</h4>
+            <h4 class="glitch-text">Backend & Systems</h4>
             <p>Backend Development, C++, Software Engineering Logic</p>
         </div>
 
@@ -544,7 +541,7 @@
             <div class="skill-icon">
                 <i class="fab fa-git-alt"></i>
             </div>
-            <h4 class="glitch-text" data-value="Development Tools">Development Tools</h4>
+            <h4 class="glitch-text">Development Tools</h4>
             <p>GitHub, Git Version Tracking, Hardware Simulation Ecosystems</p>
         </div>
     </div>

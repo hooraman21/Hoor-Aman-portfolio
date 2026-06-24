@@ -22,13 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const glitchElements = document.querySelectorAll('.glitch-text');
 
     glitchElements.forEach(element => {
-        // Trigger effect whenever the parent skill card gets hovered
-        const parentCard = element.closest('.skill-category');
+        // Fallback: If data-value attribute doesn't exist, read the text content directly
+        if (!element.dataset.value) {
+            element.dataset.value = element.innerText.trim();
+        }
+
+        // Target the closest parent card (.skill-category or .project-card), otherwise default to the element itself
+        const parentCard = element.closest('.skill-category, .project-card');
         const target = parentCard ? parentCard : element;
 
         target.addEventListener('mouseenter', () => {
             let iteration = 0;
             const originalValue = element.dataset.value;
+            
+            // Safety check: skip if the element string is somehow empty
+            if (!originalValue) return;
+
             clearInterval(element.interval);
 
             element.interval = setInterval(() => {
@@ -48,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearInterval(element.interval);
                 }
                 
-                // Control decoding acceleration speed
+                // Control decoding acceleration speed (increase denominator for slower text)
                 iteration += 1 / 3;
             }, 30);
         });
