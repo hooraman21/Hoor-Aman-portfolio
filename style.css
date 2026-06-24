@@ -273,6 +273,97 @@ header {
 }
 
 
+/* ── SKILLS SECTION LAYOUT ── */
+.skills-section {
+    padding: 100px 8% 80px 8%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+/* ── HIGH-TECH CYBER CARDS ── */
+.skill-category {
+    position: relative;
+    overflow: hidden;
+    background: rgba(19, 28, 46, 0.4);
+    border: 1px solid rgba(0, 242, 254, 0.1);
+    padding: 35px 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* Snappy mechanical easing curves instead of standard linear transitions */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Matrix Binary Ghost Text inside Cards */
+.skill-category::before {
+    content: '01101010 11001101';
+    font-family: var(--font-mono);
+    font-size: 10px;
+    position: absolute;
+    bottom: -20px;
+    right: 15px;
+    color: transparent;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    letter-spacing: 2px;
+}
+
+/* Card Hover Interactions */
+.skill-category:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--primary);
+    background: rgba(25, 36, 56, 0.75);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                0 0 30px rgba(0, 242, 254, 0.15),
+                inset 0 0 15px rgba(0, 242, 254, 0.05);
+}
+
+.skill-category:hover::before {
+    bottom: 12px;
+    color: rgba(0, 242, 254, 0.15);
+    text-shadow: 0 0 4px rgba(0, 242, 254, 0.3);
+}
+
+/* ── ICON & TEXT TRANSITIONS ── */
+.skill-icon {
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.skill-icon i {
+    display: inline-block;
+}
+
+.skill-category:hover .skill-icon {
+    color: var(--primary);
+    transform: scale(1.1) rotate(-3deg);
+    filter: drop-shadow(0 0 8px var(--primary));
+}
+
+.skill-category h4 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-family: var(--font-sans);
+}
+
+.skill-category p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
 .experience-section {
     background: rgba(19, 28, 46, 0.3);
 }
